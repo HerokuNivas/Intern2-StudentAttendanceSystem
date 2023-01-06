@@ -1,1 +1,12 @@
-
+.mainTable {
+    border: 2px solid black;
+    width: 1000px;
+  }
+    
+.mainRow {
+    border-bottom: 1px solid black;
+  }
+    
+  td {
+    text-align: center;
+  }
