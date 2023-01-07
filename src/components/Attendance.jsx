@@ -137,12 +137,12 @@ export default function Attendance(){
 
             </div>
 
-            {!inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
+            {!inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px", borderTop: "1px solid white"}}></div>}
             {!inPresent && <div style={{position: "fixed", color: "black", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students in the class currently are : {currentStrength}</div>}
 
             
             
-            {inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
+            {inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px", borderTop: "1px solid white"}}></div>}
             {inPresent && <div style={{position: "fixed", color: "black", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students left from class : {leftStrengthLength}</div>}
             
         </div>           
