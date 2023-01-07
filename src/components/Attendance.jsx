@@ -14,6 +14,7 @@ export default function Attendance(){
     const [error, setError] = useState(false);
     const [exist, setExist] = useState(false);
     const [inPresent, setInPresent] = useState(false);
+    const [search, setSearch] = useState("");
 
     const {studentsPresent, setStudentsPresent, currentStrength, setCurrentStrength, leftStrength, setLeftStrength, leftStrengthLength, setLeftStrengthLength, localError, setLocalError} = useStateContext();
 
@@ -40,6 +41,9 @@ export default function Attendance(){
             else{
                 setExist(true);
             }
+            setName("");
+            setId("");
+            setInTime("");
         }
     }
 
@@ -63,23 +67,23 @@ export default function Attendance(){
                     {exist && <p style={{color: "red", fontWeight: "bold", marginBottom: "-5px"}}>* Student is alreay present or left.</p>}
                     <p style={{color: "blue", textDecoration: "underline", fontWeight: "bold", marginBottom: "-10px", cursor: "pointer"}} onClick={()=>(setInTime(new Date().toLocaleTimeString()))}>Click here to enter the current time.</p>
                     <input type="submit" style={{background: "green", color: "white", fontSize: "15px", marginTop: "20px", padding: "10px", borderRadius: "10px"}} onClick={(e)=>(submitFun(e))}/>
-                    
                 </form> 
                 {!inPresent && <div>
                     <h2>List of currently present students</h2>
+                    <input type="text" placeholder="search by rollno" style={{height: "25px"}} onChange={(e)=>(setSearch(e.target.value))}/>
                     {studentsPresent.length > 0 && <table className="mainTable">
-                    {studentsPresent.map((key, index)=>(
+                    {search==="" && studentsPresent.map((key, index)=>(
                         <SingleStudentPresent index={index} name={key.name} rollno={key.rollno} checkin={key.checkin}/>
                     ))}
                     </table>}
-                    {localError && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
-                    <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(true))}>Click here to open list of left students.</p>
+                    {localError && search === "" && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
+                    {search==="" && <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(true))}>Click here to open list of left students.</p>}
                 </div>  }
 
                 {inPresent && <div>
                     <h2>List of left students</h2>
                     {leftStrength.length > 0 && <table className="mainTable">
-                    {leftStrength.map((key, index)=>(
+                    {search==="" && leftStrength.map((key, index)=>(
                         <tr className="mainRow">
                             <td style={{fontSize: "large"}}>{index+1}</td>
                             <td style={{fontSize: "large"}}>{key.name}</td>
@@ -89,8 +93,8 @@ export default function Attendance(){
                         </tr>
                     ))}
                     </table>}
-                    {localError && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
-                    <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(false))}>Click here to open list of present students.</p>
+                    {localError && search==="" && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
+                    {search==="" && <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(false))}>Click here to open list of present students.</p>}
                 </div>  }
 
             </div>

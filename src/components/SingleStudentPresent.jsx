@@ -30,6 +30,7 @@ export default function SingleStudentPresent({ index, name, rollno, checkin }) {
             fontSize: "larger",
           }}
           title="Current time"
+          onClick={()=>(setCheckOut(new Date().toLocaleTimeString()))}
         >
           ⌚
         </p>
