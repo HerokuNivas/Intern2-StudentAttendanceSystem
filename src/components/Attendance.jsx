@@ -15,6 +15,8 @@ export default function Attendance(){
     const [exist, setExist] = useState(false);
     const [inPresent, setInPresent] = useState(false);
     const [search, setSearch] = useState("");
+    const [matchedPresent, setMatchedPresent] = useState([]);
+    const [matchedLeft, setMatchedLeft] = useState([]);
 
     const {studentsPresent, setStudentsPresent, currentStrength, setCurrentStrength, leftStrength, setLeftStrength, leftStrengthLength, setLeftStrengthLength, localError, setLocalError} = useStateContext();
 
@@ -25,8 +27,6 @@ export default function Attendance(){
     useEffect(()=>{
         setLeftStrengthLength(leftStrength.length)
     }, [leftStrength]);
-
-
 
     function submitFun(e){
         e.preventDefault();
@@ -47,6 +47,25 @@ export default function Attendance(){
         }
     }
 
+    function searchMatched(){
+        const tempMatched = [];
+        studentsPresent.map((key) => {
+            if(key.rollno.includes(search)){
+                tempMatched.push(key);
+            }
+        });
+        setMatchedPresent(tempMatched);
+    }
+
+    function searchMatchedLeft(){
+        const tempMatched = [];
+        leftStrength.map((key) => {
+            if(key.rollno.includes(search)){
+                tempMatched.push(key);
+            }
+        });
+        setMatchedLeft(tempMatched);
+    }
     
 
     return(
@@ -70,19 +89,24 @@ export default function Attendance(){
                 </form> 
                 {!inPresent && <div>
                     <h2>List of currently present students</h2>
-                    <input type="text" placeholder="search by rollno" style={{height: "25px"}} onChange={(e)=>(setSearch(e.target.value))}/>
-                    {studentsPresent.length > 0 && <table className="mainTable">
+                    <input type="text" placeholder="search by rollno" style={{height: "25px", marginBottom: "10px"}} onChange={(e)=>(setSearch(e.target.value), searchMatched())}/>
+                    {studentsPresent.length > 0 && search==="" && <table className="mainTable">
                     {search==="" && studentsPresent.map((key, index)=>(
                         <SingleStudentPresent index={index} name={key.name} rollno={key.rollno} checkin={key.checkin}/>
                     ))}
                     </table>}
                     {localError && search === "" && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
                     {search==="" && <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(true))}>Click here to open list of left students.</p>}
+                    {matchedPresent.length===0 && search!=="" && <p style={{color: "red"}}>No results found</p>}
+                    {matchedPresent.length>0 && search!=="" && <table className="mainTable">
+                        {matchedPresent.map((key,index)=>(<SingleStudentPresent index={index} name={key.name} rollno={key.rollno} checkin={key.checkin}/>))}      
+                        </table>}
                 </div>  }
 
                 {inPresent && <div>
                     <h2>List of left students</h2>
-                    {leftStrength.length > 0 && <table className="mainTable">
+                    <input type="text" placeholder="search by rollno" style={{height: "25px", marginBottom: "10px"}} onChange={(e)=>(setSearch(e.target.value), searchMatchedLeft())}/>
+                    {leftStrength.length > 0 && search==="" && <table className="mainTable">
                     {search==="" && leftStrength.map((key, index)=>(
                         <tr className="mainRow">
                             <td style={{fontSize: "large"}}>{index+1}</td>
@@ -95,17 +119,31 @@ export default function Attendance(){
                     </table>}
                     {localError && search==="" && <p style={{color: "red"}}>Oops ! Please enter checkout time as well.</p>}
                     {search==="" && <p style={{color: "blue", textDecoration: "underline", cursor: "pointer"}} onClick={()=>(setInPresent(false))}>Click here to open list of present students.</p>}
+                    {matchedLeft.length===0 && search!=="" && <p style={{color: "red"}}>No results found</p>}
+                    {matchedLeft.length>0 && search!=="" && <table className="mainTable">
+                        {
+                            matchedLeft.map((key, index)=>(
+                                <tr className="mainRow">
+                                    <td style={{fontSize: "large"}}>{index+1}</td>
+                                    <td style={{fontSize: "large"}}>{key.name}</td>
+                                    <td style={{fontSize: "large"}}>{key.rollno}</td>
+                                    <td style={{fontSize: "large"}}>{key.checkin}</td>
+                                    <td style={{fontSize: "large"}}>{key.checkout}</td>
+                                </tr>
+                            ))
+                        }      
+                        </table>}
                 </div>  }
 
             </div>
 
-            {!inPresent && <div style={{position: "fixed", bottom: "0", background: "#80DOC7", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
-            {!inPresent && <div style={{position: "fixed", color: "green", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students in the class currently are : {currentStrength}</div>}
+            {!inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
+            {!inPresent && <div style={{position: "fixed", color: "black", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students in the class currently are : {currentStrength}</div>}
 
             
             
-            {inPresent && <div style={{position: "fixed", bottom: "0", background: "#80DOC7", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
-            {inPresent && <div style={{position: "fixed", color: "red", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students left from class : {leftStrengthLength}</div>}
+            {inPresent && <div style={{position: "fixed", bottom: "0", background: "#13b3a0", paddingLeft: "100%", paddingRight: "100%", paddingTop: "60px", marginTop: "10px"}}></div>}
+            {inPresent && <div style={{position: "fixed", color: "black", bottom: "10px", left: "20px", right: "20px", fontWeight: "bolder", fontSize: "larger"}}>Total number of students left from class : {leftStrengthLength}</div>}
             
         </div>           
     )
